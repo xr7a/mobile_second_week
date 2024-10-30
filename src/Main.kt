@@ -1,17 +1,25 @@
 import java.io.File
-import ConsoleIO
-import FileIO
+import java.io.FileNotFoundException
+
 val console : ConsoleIO = ConsoleIO()
 val file: FileIO = FileIO()
+var base: Int = 10
+
+
+
 fun main(){
     println("Выберите тип ввода входных данных: 1) файл 2) консоль")
     val choice = readLine()
+    println("Выберите систему счисления выходных данных (по умолчанию 10):")
+    val baseChoice = readLine()
+    if (baseChoice != "") base = baseChoice!!.toInt()
     val console: ConsoleIO
     when(choice){
         "1"->{
             readFromFile()
         }
         "2"->{
+            println("Введите входные данные:")
             readFromConsole()
         }
         else -> {
@@ -22,14 +30,15 @@ fun main(){
 }
 
 fun readFromFile(){
+    var results: MutableList<String> = mutableListOf()
     try {
         val lines = file.read()
-        val results = mainAlgorithm(lines)
+        results = mainAlgorithm(lines)
         file.write(results)
 
     }
-    catch (e: Exception){
-        println("Файл не был найден. Пожалуйста введите данные в консоль")
+    catch (e: FileNotFoundException){
+        println("Файл с входными данными не был найден. Пожалуйста введите данные в консоль")
         readFromConsole()
     }
 }
@@ -45,17 +54,17 @@ fun mainAlgorithm(lines: MutableList<String>): MutableList<String>{
     lines.forEach {
         val s = it.split("\\s".toRegex())
         try{
-            val firstNumber = s[0].toInt()
-            val secondNumber = s[2].toInt()
+            val firstNumber: Long = s[0].toLong()
+            val secondNumber: Long = s[2].toLong()
             when(s[1]){
-                "+" -> results.add((firstNumber + secondNumber).toString())
-                "-" -> results.add((firstNumber - secondNumber).toString())
-                "*" -> results.add((firstNumber * secondNumber).toString())
-                "/" -> results.add((firstNumber / secondNumber).toString())
-
+                "+" -> results.add((firstNumber + secondNumber).toBase(base))
+                "-" -> results.add((firstNumber - secondNumber).toBase(base))
+                "*" -> results.add((firstNumber * secondNumber).toBase(base))
+                "/" -> results.add((firstNumber / secondNumber).toBase(base))
+                else -> throw Exception()
             }
         }
-        catch (e: Exception){
+        catch (e: NumberFormatException){
             results.add("Неверный формат выражения")
         }
     }

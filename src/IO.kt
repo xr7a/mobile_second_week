@@ -1,5 +1,4 @@
 import java.io.File
-
 interface IO {
     fun write(lines: MutableList<String>)
     fun read(): MutableList<String>
