@@ -12,7 +12,7 @@ fun main(){
     val choice = readLine()
     println("Выберите систему счисления выходных данных (по умолчанию 10):")
     val baseChoice = readLine()
-    if (baseChoice != "") base = baseChoice!!.toInt()
+    base = baseChoice?.takeIf{it != "" }?.toInt() ?: base
     val console: ConsoleIO
     when(choice){
         "1"->{
@@ -30,7 +30,7 @@ fun main(){
 }
 
 fun readFromFile(){
-    var results: MutableList<String> = mutableListOf()
+    var results: List<String> = mutableListOf()
     try {
         val lines = file.read()
         results = mainAlgorithm(lines)
@@ -49,7 +49,7 @@ fun readFromConsole(){
     console.write(results)
 }
 
-fun mainAlgorithm(lines: MutableList<String>): MutableList<String>{
+fun mainAlgorithm(lines: List<String>): List<String>{
     val results = mutableListOf<String>()
     lines.forEach {
         val s = it.split("\\s".toRegex())
@@ -68,5 +68,5 @@ fun mainAlgorithm(lines: MutableList<String>): MutableList<String>{
             results.add("Неверный формат выражения")
         }
     }
-    return results
+    return results.toList()
 }
